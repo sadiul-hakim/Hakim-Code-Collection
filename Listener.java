@@ -26,3 +26,14 @@ public class Listener implements NativeKeyListener, NativeMouseListener {
         GlobalScreen.addNativeMouseListener(new Listener()); // Add mouse listener
     }
 }
+
+
+/*
+
+<dependency>
+            <groupId>com.github.kwhat</groupId>
+            <artifactId>jnativehook</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+*/
