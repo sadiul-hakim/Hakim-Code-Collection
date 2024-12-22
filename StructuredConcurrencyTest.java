@@ -8,6 +8,25 @@ class StructuredConcurrencyTest{
 //		firstSubTaskFails();
 		firstSubTaskSucceed();
 	}
+
+	private static void customeTaskScope() {
+		try (var taskScope = new CustomeTaskScope()) {
+			var taskOne = new LongRunningTask("Weather-1", 3, "100", true);
+			var taskTwo = new LongRunningTask("Weather-2", 5, "200", false);
+			var taskThree = new LongRunningTask("Weather-3", 7, "300", false);
+
+			taskScope.fork(taskOne);
+			taskScope.fork(taskTwo);
+			taskScope.fork(taskThree);
+			
+			taskScope.join();
+			
+			System.out.println("Result => "+taskScope.response());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private static void firstSubTaskSucceed() {
 		try (var taskScope = new StructuredTaskScope.ShutdownOnSuccess<TaskResponse>()) {
@@ -155,4 +174,37 @@ class StructuredConcurrencyTest{
 
 record TaskResponse(String name, String response, long timeTaken) {
 }
+	class CustomeTaskScope extends StructuredTaskScope<TaskResponse> {
+
+	private final List<Subtask<? extends TaskResponse>> successfulTasks = new CopyOnWriteArrayList<>();
+
+	@Override
+	protected void handleComplete(Subtask<? extends TaskResponse> subtask) {
+		if (subtask.state().equals(State.SUCCESS)) {
+			int size = 0;
+			synchronized (successfulTasks) {
+				successfulTasks.add(subtask);
+				size = successfulTasks.size();
+			}
+
+			if (size == 2) {
+				this.shutdown();
+			}
+		}
+	}
+
+	public TaskResponse response() {
+		super.ensureOwnerAndJoined();
+		if (successfulTasks.size() != 2) {
+			throw new RuntimeException("Atleast 2 subtasks must be successful.");
+		}
+		var a = successfulTasks.get(0).get();
+		var b = successfulTasks.get(1).get();
+
+		var res = (Integer.parseInt(a.response()) + Integer.parseInt(b.response())) / 2.0;
+		var time = a.timeTaken() + b.timeTaken() / 2;
+		return new TaskResponse("Weather", res + "", time);
+	}
+}
+
 }
