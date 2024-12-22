@@ -1,6 +1,6 @@
-class StructuredConcurrencyTest{
+class StructuredConcurrencyTest {
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
 		// Even though main thread is interrupted subtasks are stopped successfully.
 		// inturruptMain();
@@ -18,16 +18,16 @@ class StructuredConcurrencyTest{
 			taskScope.fork(taskOne);
 			taskScope.fork(taskTwo);
 			taskScope.fork(taskThree);
-			
+
 			taskScope.join();
-			
-			System.out.println("Result => "+taskScope.response());
+
+			System.out.println("Result => " + taskScope.response());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void firstSubTaskSucceed() {
 		try (var taskScope = new StructuredTaskScope.ShutdownOnSuccess<TaskResponse>()) {
 			var taskOne = new LongRunningTask("TaskOne", 3, "response1", false);
@@ -35,10 +35,10 @@ class StructuredConcurrencyTest{
 
 			taskScope.fork(taskOne);
 			taskScope.fork(taskTwo);
-			
+
 			taskScope.join();
-			
-			System.out.println("Result => "+taskScope.result());
+
+			System.out.println("Result => " + taskScope.result());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,12 +52,12 @@ class StructuredConcurrencyTest{
 
 			var subTask1 = taskScope.fork(taskOne);
 			var subTask2 = taskScope.fork(taskTwo);
-			
+
 			taskScope.join();
 			taskScope.throwIfFailed();
-			
-			System.out.println("Task1 => "+subTask1.get());
-			System.out.println("Task2 => "+subTask2.get());
+
+			System.out.println("Task1 => " + subTask1.get());
+			System.out.println("Task2 => " + subTask2.get());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,93 +118,93 @@ class StructuredConcurrencyTest{
 			}
 		});
 	}
-  
 
-  class LongRunningTask implements Callable<TaskResponse> {
+	class LongRunningTask implements Callable<TaskResponse> {
 
-	private final String name;
-	private final int time;
-	private final String response;
-	private final boolean fail;
+		private final String name;
+		private final int time;
+		private final String response;
+		private final boolean fail;
 
-	public LongRunningTask(String name, int time, String response, boolean fail) {
-		super();
-		this.name = name;
-		this.time = time;
-		this.response = response;
-		this.fail = fail;
-	}
-
-	@Override
-	public TaskResponse call() throws Exception {
-		System.out.println("> Long Running Task "+name+" Started");
-		long start = System.currentTimeMillis();
-
-		int count = 0;
-		while (count++ < time) {
-
-			if(Thread.interrupted()) {
-				System.out.println("Task "+name+" is interrupted!");
-				throwFailure(name);
-			}
-			
-			System.out.println("Working on : "+name+" => "+count);
-			
-			try {
-				TimeUnit.SECONDS.sleep(1);
-			}catch (Exception ex) {
-				throwFailure(name);
-			}
-		}
-		
-		if(fail) {
-			throwFailure(name);
+		public LongRunningTask(String name, int time, String response, boolean fail) {
+			super();
+			this.name = name;
+			this.time = time;
+			this.response = response;
+			this.fail = fail;
 		}
 
-		System.out.println("> Long Running Task "+name+" Ended");
-		long end = System.currentTimeMillis();
-		return new TaskResponse(name, response, (end - start));
+		@Override
+		public TaskResponse call() throws Exception {
+			System.out.println("> Long Running Task " + name + " Started");
+			long start = System.currentTimeMillis();
+
+			int count = 0;
+			while (count++ < time) {
+
+				if (Thread.interrupted()) {
+					System.out.println("Task " + name + " is interrupted!");
+					throwFailure(name);
+				}
+
+				System.out.println("Working on : " + name + " => " + count);
+
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (Exception ex) {
+					throwFailure(name);
+				}
+			}
+
+			if (fail) {
+				throwFailure(name);
+			}
+
+			System.out.println("> Long Running Task " + name + " Ended");
+			long end = System.currentTimeMillis();
+			return new TaskResponse(name, response, (end - start));
+		}
+
+		private void throwFailure(String name) {
+			System.out.println("Task " + name + " Failed");
+			throw new RuntimeException("Failed");
+		}
 	}
 
-	private void throwFailure(String name) {
-		System.out.println("Task "+name+" Failed");
-		throw new RuntimeException("Failed");
+	record TaskResponse(String name, String response, long timeTaken) {
 	}
-}
 
-record TaskResponse(String name, String response, long timeTaken) {
-}
 	class CustomeTaskScope extends StructuredTaskScope<TaskResponse> {
 
-	private final List<Subtask<? extends TaskResponse>> successfulTasks = new CopyOnWriteArrayList<>();
+		private final List<Subtask<? extends TaskResponse>> successfulTasks = new CopyOnWriteArrayList<>();
 
-	@Override
-	protected void handleComplete(Subtask<? extends TaskResponse> subtask) {
-		if (subtask.state().equals(State.SUCCESS)) {
-			int size = 0;
-			synchronized (successfulTasks) {
-				successfulTasks.add(subtask);
-				size = successfulTasks.size();
-			}
+		@Override
+		protected void handleComplete(Subtask<? extends TaskResponse> subtask) {
+			if (subtask.state().equals(State.SUCCESS)) {
+				int size = 0;
+				synchronized (successfulTasks) {
+					successfulTasks.add(subtask);
+					size = successfulTasks.size();
+				}
 
-			if (size == 2) {
-				this.shutdown();
+				if (size == 2) {
+					this.shutdown();
+				}
 			}
 		}
-	}
 
-	public TaskResponse response() {
-		super.ensureOwnerAndJoined();
-		if (successfulTasks.size() != 2) {
-			throw new RuntimeException("Atleast 2 subtasks must be successful.");
+		public TaskResponse response() {
+			super.ensureOwnerAndJoined();
+			if (successfulTasks.size() != 2) {
+				throw new RuntimeException("Atleast 2 subtasks must be successful.");
+			}
+			var a = successfulTasks.get(0).get();
+			var b = successfulTasks.get(1).get();
+
+			var res = (Integer.parseInt(a.response()) + Integer.parseInt(b.response())) / 2.0;
+			var time = a.timeTaken() + b.timeTaken() / 2;
+			return new TaskResponse("Weather", res + "", time);
 		}
-		var a = successfulTasks.get(0).get();
-		var b = successfulTasks.get(1).get();
-
-		var res = (Integer.parseInt(a.response()) + Integer.parseInt(b.response())) / 2.0;
-		var time = a.timeTaken() + b.timeTaken() / 2;
-		return new TaskResponse("Weather", res + "", time);
 	}
-}
 
 }
