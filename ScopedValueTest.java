@@ -25,6 +25,11 @@ public class ScopedValueTest {
 						System.out.println(Thread.currentThread() + " Beginning of the  Scope under New Thread : " + SCOPED_VALUE.get());
 					}
 				});
+
+				/*
+    					Even Though the new Thread ("New Thread::" - Line 21) declared under same scope the string associated with Scoped Value seems not available under "New Thread::".
+	 But the value associated with Scoped Value is available under the threads we create using StructuredTaskScope. You can run the code and see the result.
+    				*/
 				
 				try(var scope = new StructuredTaskScope<String>()){
 					scope.fork(()->{
