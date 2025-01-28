@@ -1,3 +1,5 @@
+import java.util.concurrent.StructuredTaskScope;
+
 public class ScopedValueTest {
 
 	public static final ScopedValue<String> SCOPED_VALUE = ScopedValue.newInstance();
@@ -16,13 +18,25 @@ public class ScopedValueTest {
 		try {
 			ScopedValue.callWhere(SCOPED_VALUE, "New Call", () -> {
 
-				Thread.ofPlatform().name("New Thread::").start(() -> {
+				Thread.ofVirtual().name("New Thread::").start(() -> {
 					
 					// isBound is false as this code is inside a new thread
 					if (SCOPED_VALUE.isBound()) {
 						System.out.println(Thread.currentThread() + " Beginning of the  Scope under New Thread : " + SCOPED_VALUE.get());
 					}
 				});
+				
+				try(var scope = new StructuredTaskScope<String>()){
+					scope.fork(()->{
+						
+						if(SCOPED_VALUE.isBound()) {							
+							System.out.println(Thread.currentThread() + " under StructuredTaskScope : " + SCOPED_VALUE.get());
+						}
+						return "Done";
+					});
+					
+					scope.join();
+				}
 				
 				if (SCOPED_VALUE.isBound()) {
 					System.out.println(Thread.currentThread() + " Beginning of the  Scope : " + SCOPED_VALUE.get());
