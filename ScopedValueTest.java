@@ -10,6 +10,7 @@ public class ScopedValueTest {
 		
 		// Scoped Value is Immutable.
 		// Value bound to ScopedValue is not only associated with that very Thread also that very scope.
+		// The moment the method completes, The ScopedValue value is unbound and it will be cleared up automatically.
 		try {
 			ScopedValue.callWhere(SCOPED_VALUE, "New Call", ()->{
 				
