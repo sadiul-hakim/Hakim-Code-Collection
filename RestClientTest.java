@@ -108,3 +108,45 @@ record Post(
         String title,
         String body
 ) {
+
+@Bean
+public RestClient restClient() {
+    RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectTimeout(5000) // 5 seconds
+            .setResponseTimeout(10000) // 10 seconds
+            .build();
+
+    CloseableHttpClient httpClient = HttpClients.custom()
+            .setDefaultRequestConfig(requestConfig)
+            .build();
+
+    return RestClient.builder()
+            .requestFactory(new HttpComponentsClientHttpRequestFactory(httpClient))
+            .build();
+}
+
+@Bean
+    public RestClient restClient() {
+        // Create a Virtual Thread Executor
+        Executor virtualThreadExecutor = Executors.newVirtualThreadPerTaskExecutor();
+
+        // Configure Java HttpClient with Virtual Threads
+        HttpClient httpClient = HttpClient.newBuilder()
+                .executor(virtualThreadExecutor)  // Use Virtual Threads
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        // Use the custom HttpClient in RestClient
+        return RestClient.builder()
+                .requestFactory(new JdkClientHttpRequestFactory(httpClient)) // Use Java HttpClient
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .build();
+    }
+    
+/*
+Thread
+1. Using @Async with RestClient
+2. Using ExecutorService for Custom Thread Pools
+3. Create a Custom RestClient Bean
+
+*/
