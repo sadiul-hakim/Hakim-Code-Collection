@@ -1,0 +1,70 @@
+
+# DOCKER
+
+## Create an Image
+docker pull postgres
+
+## List images
+docker images
+`
+## List Running Containers
+docker ps 
+
+## List All Containers
+docker ps -a
+
+## Create a container and start
+docker run -d --name {container_name} -p {port} -e {environment_variable} {volume} {image_name}
+docker run -d --name hakim-psql-db -p 5432:5432 -e POSTGRES_PASSWORD=hakim@123 postgres_db:/var/lib/postgres/data postgres
+- The run commad creates a container everytime.
+
+## Create a container under a network
+docker create --net {network_name} {image-name}
+
+## Start an existing container
+docker start {container_id}
+
+## Stop a container
+docker stop {id}
+
+## Delete a container 
+docker rm {id}
+
+## Delete an image
+
+docker rmi {image_id}
+
+## Log a container
+docker logs {container_name}
+
+## Execute a container 
+docker exec -it {container_name suppose hakim-psql-db} psql -U postgres;
+docker exec -it mysql_db bash -> mysql -u {username} -p
+
+## List network
+docker network ls
+
+## Create Network
+docker network create {name}
+
+## Connect to network
+docker network connect {network_name} {container_name}
+
+## Tag And Push to repository
+docker tag {name} {docker_username}/{image_name}:{version}
+docker push `{tag_name} or {docker_username}/{image_name}:{version}` 
+
+// Raw Kafka
+./kc.sh --start-dev --http-port=8180
+bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+bin\windows\kafka-server-start.bat config\server.properties
+bin\windows\kafka-console-producer.bat --topic firstTopic --bootstrap-server localhost:9092
+bin\windows\kafka-console-consumer.bat --topic firstTopic --from-beginning --bootstrap-server localhost:9092
+bin\windows\kafka-topics.bat --create --topic second-topic --bootstrap-server localhost:9092 --partitions 2 --replication-factor 1
+
+// Docker Kafka
+docker-compose -f ./arm64-docker-compose.yml up -d
+docker-compose -f ./arm64-docker-compose.yml exec broker bash
+kafka-topics --create --topic first-topic --bootstrap-server localhost:9092 --partitions 1
+docker-compose -f ./file exec broker bash
+kafka-console-producer --topic first-topic --broker-list localhost:9092 --property parse-key=true --property key.separator=":"
