@@ -77,11 +77,17 @@ run {
 ```
 
 #### Option B: From Command Line
+```
 ./gradlew run --no-daemon -Dorg.gradle.jvmargs="-XX:+UseShenandoahGC"
+```
 
 ### 🧾 Check Active GC at Runtime
 Use this to confirm the JVM flags in use:
+```
 java -XX:+PrintCommandLineFlags -version
+```
 
 Or print GC logs (optional):
+```
 java -Xlog:gc -XX:+UseZGC -jar your-app.jar
+```
