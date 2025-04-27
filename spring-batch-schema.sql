@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS batch_step_execution_context
     CONSTRAINT step_exec_ctx_fk FOREIGN KEY (step_execution_id) REFERENCES batch_step_execution (step_execution_id)
 );
 
-CREATE SEQUENCE batch_job_execution_seq
+CREATE SEQUENCE IF NOT EXISTS batch_job_execution_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
@@ -85,7 +85,7 @@ CREATE SEQUENCE batch_job_execution_seq
     CACHE 1
     NO CYCLE;
 
-CREATE SEQUENCE batch_job_seq
+CREATE SEQUENCE IF NOT EXISTS batch_job_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
@@ -93,7 +93,7 @@ CREATE SEQUENCE batch_job_seq
     CACHE 1
     NO CYCLE;
 
-CREATE SEQUENCE batch_step_execution_seq
+CREATE SEQUENCE IF NOT EXISTS batch_step_execution_seq
     INCREMENT BY 1
     MINVALUE 1
     MAXVALUE 9223372036854775807
