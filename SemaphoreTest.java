@@ -1,3 +1,9 @@
+/*
+In Java, a Semaphore is a concurrency utility from the java.util.concurrent package used to control access to a shared resource by multiple threads.
+
+Think of it like a counter of "permits" that threads must acquire before proceeding. It's useful when you want to limit the number of concurrent accesses to a certain section of code or resource.
+*/
+
 class SemaphoreTest{
   public static void main(String[] args) {
         Semaphore semaphore = new Semaphore(3); // only 3 threads allowed
