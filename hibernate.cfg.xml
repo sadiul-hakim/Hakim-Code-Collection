@@ -1,0 +1,31 @@
+<!-- hibernate.cfg.xml -->
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- JDBC connection settings -->
+        <property name="hibernate.hikari.dataSourceClassName">org.postgresql.ds.PGSimpleDataSource</property>
+        <property name="hibernate.hikari.dataSource.user">postgres</property>
+        <property name="hibernate.hikari.dataSource.password">secret</property>
+        <property name="hibernate.hikari.dataSource.databaseName">testdb</property>
+        <property name="hibernate.hikari.dataSource.portNumber">5432</property>
+        <property name="hibernate.hikari.dataSource.serverName">localhost</property>
+
+        <!-- HikariCP settings -->
+        <property name="hibernate.hikari.maximumPoolSize">10</property>
+        <property name="hibernate.hikari.minimumIdle">2</property>
+        <property name="hibernate.hikari.idleTimeout">30000</property>
+        <property name="hibernate.hikari.maxLifetime">1800000</property>
+        <property name="hibernate.hikari.connectionTimeout">20000</property>
+
+        <!-- Hibernate settings -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+    </session-factory>
+</hibernate-configuration>
