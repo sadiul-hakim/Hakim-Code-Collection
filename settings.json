@@ -1,0 +1,44 @@
+{
+  "workbench.iconTheme": "material-icon-theme",
+  "redhat.telemetry.enabled": true,
+  "editor.fontFamily": "JetBrains Mono, Fira Code,Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 22,
+  "git.autofetch": true,
+  "svelte.enable-ts-plugin": true,
+  "editor.formatOnSave": true,
+  "php.debug.executablePath": "",
+  "notebook.formatOnSave.enabled": true,
+  "maven.terminal.useJavaHome": true,
+  "workbench.editorAssociations": {
+    "*.png": "editor.excalidraw"
+  },
+  "terminal.external.windowsExec": "C:\\Program Files\\Git\\bin\\bash.exe",
+  "java.configuration.runtimes": [],
+  "java.jdt.ls.vmargs": "--enable-preview",
+  "jdk.telemetry.enabled": false,
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "workbench.colorTheme": "Darcula",
+  "material-icon-theme.folders.theme": "classic",
+  "workbench.editor.showTabs": "multiple",
+  "editor.tabSizing": "shrink",
+  "editor.minimap.enabled": false,
+  "breadcrumbs.enabled": true,
+  "editor.renderLineHighlight": "all",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "intelephense.environment.phpVersion": "8.2",
+  "workbench.activityBar.location": "default",
+  "workbench.sideBar.location": "left",
+  "workbench.statusBar.visible": true,
+  "editor.formatOnPaste": true
+}

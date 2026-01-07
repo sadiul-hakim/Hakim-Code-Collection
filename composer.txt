@@ -1,0 +1,65 @@
+Install PHP and Composer (Powershell)
+-------------------------------------
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.4'))
+
+1. composer init -> Initialize Composer in new projct
+2. composer require  {name/name} -> Adds a dependency to the projects
+3. composer require --dev  {name/name} -> Adds a dev dependency to the projects
+4. composer dump-autoload -o -> Autoloading
+5. composer install -> Installing packages in project
+6. composer remove -> Removes packages in project
+7. composer updates -> Installs packages with updated version (latest).
+8. composer create-project -> 
+
+
+Make Laravel Project
+---------------------
+laravel new {name}
+
+Clearn Cache
+---------------
+php artisan config:clear
+php artisan cache:clear
+
+Migrate
+----------
+php artisan migrate
+
+Run server
+---------------
+php artisan serve
+
+Commands
+----------
+php artisan make:controller UserControlle
+php artisan make:controller UserControlle --resource
+php artisan make:view about
+php artisan make:model {name}
+php artisan make:component about
+php artisan key:generate
+php artisan make:rule uppercase -- Make Validation rule
+php artisan make:middleware {name} -- Make Middleware
+php artisan storage:link -- makes private storage public
+php artisan lang:publish -- enable Localization
+php artisan stub:publish -- stub is the template of artisan `make:` command
+php artisan down
+php artisan down --secret=""
+php artisan up
+php artisan make:migration create_posts_table
+php artisan migrate
+php artisan migrate:reset
+php artisan migrate:rollback --step 3
+php artisan migrate --path=/database/migration/2026_01_04_150744_create_teachers_table.php
+php artisan migrate:refresh
+php artisan make:seeder TeachersSeeder
+php artisan db:seed --class=TeachersSeeder
+php artisan make:mail {name}
+php artisan install api
+
+Publish lang folder
+---------------------
+php artisan lang:publish
+
+Inspecting Model
+------------------
+php artisan model:show Course
